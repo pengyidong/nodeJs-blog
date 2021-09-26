@@ -2,6 +2,7 @@ const querystring = require('querystring')
 const handleBlogRouter = require('./src/router/blog')
 const handleUserRouter = require('./src/router/user')
 const { get, set } = require('./src/db/redis')
+const { access } = require('./src/utils/log')
 
 // 获取 cookie 的过期时间
 const getCookieExpires = () => {
@@ -42,6 +43,10 @@ const getPostData = (req) => {
 }
 
 const serverHandle = (req, res) => {
+    let date = new Date();
+    // 记录 access log
+    access(`方法：${req.method}\nAPI：${req.url}\n浏览器信息：${req.headers['user-agent']}\n当前时间：${date.toLocaleString()}\n---------------------------------------------------------------------------------------------------------------------`)
+
     // 设置返回格式
     res.setHeader('Content-type', 'application/json')
 
